@@ -1,0 +1,55 @@
+<script type="text/ng-template" id="row">
+  <tr>
+    <% model_class.columns.each do |column| %>
+       <td><%= rest_manager_row(column) %></td>
+    <% end %>
+   <td><a href="javascript:" ng-click="showEdit(row)">Edit</a></td>
+   <td><a href="javascript:" ng-click="deleteEntry(row)">Delete</a></td>
+  </tr>
+</script>
+
+<div ng-controller="sortCtrl" ng-app="management"
+  data-singular-model-name = "<%= singular_model_name %>"
+  data-plural-model-name = "<%= plural_model_name %>"
+  data-editable-columns="<%= editable_columns.join(',') %>"
+  data-visible-columns="<%= visible_columns.join(',') %>">
+
+  <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <%= simple_form_for(model_class.new) do |form| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="formModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            <%= form.input :name, ng: { model: 'editedResource.name' } %>
+            <%= form.input :age, ng: { model: 'editedResource.age' } %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            <button type="button" ng-click="submitEntry(row)" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <table st-table="rowCollection" class="table table-striped">
+    <thead>
+      <tr>
+        <% visible_columns.each do |column| %>
+          <th><%= column.humanize.capitalize %></th>
+        <% end %>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="{{row.id}}" manager-row ng-repeat="row in rowCollection"></tr>
+    </tbody>
+  </table>
+
+  <a href="javascript:" ng-click="showNew()">Add a new</a>
+</div>
