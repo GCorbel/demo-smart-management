@@ -36,7 +36,6 @@ app.controller "sortCtrl", [
     Restangular.setRequestSuffix('.json')
 
     scope.callServer = (tableState) ->
-      console.log tableState
       scope.rowCollection = []
       Restangular.all(RestManager.pluralModelName()).getList(tableState).then (resources) ->
         tableState.pagination.numberOfPages = Math.ceil(resources.meta.total / tableState.pagination.number)
