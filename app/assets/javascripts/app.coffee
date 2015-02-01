@@ -15,6 +15,17 @@ app.factory('RestManager', =>
       $("[ng-app='#{app.name}']").first().data('singular-model-name')
 )
 
+app.config (RestangularProvider) ->
+  RestangularProvider.addResponseInterceptor (data, operation) ->
+    extractedData = undefined
+    if operation == 'getList'
+      extractedData = data.items
+      extractedData.meta = data.meta
+    else
+      extractedData = data.data
+
+    extractedData
+
 app.controller "sortCtrl", [
   "$scope"
   "$filter"
@@ -22,10 +33,14 @@ app.controller "sortCtrl", [
   "RestManager"
   (scope, filter, Restangular, RestManager) ->
     Restangular.setRequestSuffix('.json')
-    scope.rowCollection = []
-    Restangular.all(RestManager.pluralModelName()).getList().then (resources) ->
-      $.each resources, (_, resource) ->
-        addNewRow(resource)
+
+    scope.callServer = (tableState) ->
+      console.log tableState
+      scope.rowCollection = []
+      Restangular.all(RestManager.pluralModelName()).getList(tableState).then (resources) ->
+        tableState.pagination.numberOfPages = Math.ceil(resources.meta.total / tableState.pagination.number)
+        $.each resources, (_, resource) ->
+          addNewRow(resource)
 
     scope.showEdit = (row) ->
       scope.editedRow = row

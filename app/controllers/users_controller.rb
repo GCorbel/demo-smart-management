@@ -5,7 +5,10 @@ class UsersController < ApplicationController
   respond_to :html, :json
 
   def index
-    respond_with(users)
+    users = UserSearch.new(sort: sort_options,
+                           pagination: pagination_options).call
+    result = { items: users, meta: { total: User.count } }
+    respond_with(result)
   end
 
   def show
@@ -34,5 +37,13 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :age)
+  end
+
+  def sort_options
+    JSON.parse(params["sort"]).symbolize_keys if params["sort"]
+  end
+
+  def pagination_options
+    JSON.parse(params["pagination"]).symbolize_keys if params["pagination"]
   end
 end

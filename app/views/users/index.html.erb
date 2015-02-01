@@ -36,11 +36,11 @@
     <% end %>
   </div>
 
-  <table st-table="rowCollection" class="table table-striped">
+  <table st-table="rowCollection" st-pipe="callServer" class="table table-striped">
     <thead>
       <tr>
         <% visible_columns.each do |column| %>
-          <th><%= column.humanize.capitalize %></th>
+          <th st-sort="<%= column %>"><%= column.humanize.capitalize %></th>
         <% end %>
         <th></th>
         <th></th>
@@ -49,6 +49,12 @@
     <tbody>
       <tr id="{{row.id}}" manager-row ng-repeat="row in rowCollection"></tr>
     </tbody>
+	<tfoot>
+      <tr>
+        <td class="text-center" st-pagination="" st-items-by-page="3" colspan="<%= colspan %>">
+        </td>
+      </tr>
+	</tfoot>
   </table>
 
   <a href="javascript:" ng-click="showNew()">Add a new</a>
