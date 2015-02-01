@@ -38,5 +38,14 @@ describe UserSearch do
       actual = UserSearch.new(pagination: pagination_options).call
       expect(actual).to eq [user2]
     end
+
+    it 'do the search' do
+      user1 = User.create(name: 'user1', age: 2)
+      User.create(name: 'Guirec', age: 1)
+
+      search_options = { name: 'user' }
+      actual = UserSearch.new(search: search_options).call
+      expect(actual).to eq [user1]
+    end
   end
 end

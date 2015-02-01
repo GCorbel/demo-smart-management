@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 
   def index
     users = UserSearch.new(sort: sort_options,
+                           search: search_options,
                            pagination: pagination_options).call
     result = { items: users, meta: { total: User.count } }
     respond_with(result)
@@ -45,5 +46,14 @@ class UsersController < ApplicationController
 
   def pagination_options
     JSON.parse(params["pagination"]).symbolize_keys if params["pagination"]
+  end
+
+  def search_options
+    if params["search"]
+      search_params = JSON.parse(params["search"])
+      if search_params["predicateObject"]
+        search_params["predicateObject"].symbolize_keys
+      end
+    end
   end
 end

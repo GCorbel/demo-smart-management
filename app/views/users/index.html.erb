@@ -45,6 +45,11 @@
         <th></th>
         <th></th>
       </tr>
+      <tr>
+        <% visible_columns.each do |column| %>
+          <td><input st-search="'<%= column %>'"/></td>
+        <% end %>
+      </tr>
     </thead>
     <tbody>
       <tr id="{{row.id}}" manager-row ng-repeat="row in rowCollection"></tr>
