@@ -15,7 +15,7 @@ app.factory('RestManager', =>
       $("[ng-app='#{app.name}']").first().data('singular-model-name')
 )
 
-app.config (RestangularProvider) ->
+app.config ["RestangularProvider", (RestangularProvider) ->
   RestangularProvider.addResponseInterceptor (data, operation) ->
     extractedData = undefined
     if operation == 'getList'
@@ -25,6 +25,7 @@ app.config (RestangularProvider) ->
       extractedData = data.data
 
     extractedData
+]
 
 app.controller "sortCtrl", [
   "$scope"
