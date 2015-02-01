@@ -22,7 +22,7 @@ app.config ["RestangularProvider", (RestangularProvider) ->
       extractedData = data.items
       extractedData.meta = data.meta
     else
-      extractedData = data.data
+      extractedData = data
 
     extractedData
 ]
