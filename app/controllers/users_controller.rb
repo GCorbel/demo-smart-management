@@ -5,10 +5,14 @@ class UsersController < ApplicationController
   respond_to :html, :json
 
   def index
-    users = UserSearch.new(sort: sort_options,
-                           search: search_options,
-                           pagination: pagination_options).call
-    result = { items: users, meta: { total: User.count } }
+    users = User.all
+    users = SmartManagement::Searcher.new(users, search_options).call
+    total = users.count
+
+    users = SmartManagement::Paginer.new(users, pagination_options).call
+    users = SmartManagement::Sorter.new(users, sort_options).call
+
+    result = { items: users, meta: { total: total } }
     respond_with(result)
   end
 
